@@ -16,6 +16,8 @@ namespace win_power_management
         [DllImport("PowrProf.dll", CharSet = CharSet.Unicode)]
         static extern uint PowerGetActiveScheme(IntPtr UserPowerKey, out IntPtr ActivePolicyGuid);
 
+        public static readonly IDictionary<string, Guid> _schemes = GetAll();
+
         public enum AccessFlags : uint
         {
             ACCESS_SCHEME = 16,
@@ -63,6 +65,13 @@ namespace win_power_management
         public static void SetActiveScheme(Guid schemeGuid)
         {
             PowerSetActiveScheme(IntPtr.Zero, schemeGuid);
+        }
+
+        public static Guid GetActiveScheme()
+        {
+            PowerGetActiveScheme(IntPtr.Zero, out IntPtr activeScheme);
+
+            return (Guid)Marshal.PtrToStructure(activeScheme, typeof(Guid));
         }
     }
 }

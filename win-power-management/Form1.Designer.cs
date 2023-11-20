@@ -39,13 +39,11 @@
             notifyIcon1.Icon = (Icon)resources.GetObject("notifyIcon1.Icon");
             notifyIcon1.Text = "notifyIcon1";
             notifyIcon1.Visible = true;
-            notifyIcon1.MouseDoubleClick += notifyIcon1_MouseDoubleClick;
             // 
             // contextMenuStrip1
             // 
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(181, 26);
-            contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
             // Form1
             // 
