@@ -31,7 +31,7 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             notifyIcon1 = new NotifyIcon(components);
-            checkedListBox1 = new CheckedListBox();
+            contextMenuStrip1 = new ContextMenuStrip(components);
             SuspendLayout();
             // 
             // notifyIcon1
@@ -41,21 +41,17 @@
             notifyIcon1.Visible = true;
             notifyIcon1.MouseDoubleClick += notifyIcon1_MouseDoubleClick;
             // 
-            // checkedListBox1
+            // contextMenuStrip1
             // 
-            checkedListBox1.FormattingEnabled = true;
-            checkedListBox1.Location = new Point(12, 12);
-            checkedListBox1.Name = "checkedListBox1";
-            checkedListBox1.Size = new Size(434, 112);
-            checkedListBox1.TabIndex = 0;
-            checkedListBox1.ItemCheck += checkedListBox1_ItemCheck;
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 26);
+            contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(458, 131);
-            Controls.Add(checkedListBox1);
             Name = "Form1";
             Text = "Power management";
             Load += Form1_Load;
@@ -65,6 +61,6 @@
         #endregion
 
         private NotifyIcon notifyIcon1;
-        private CheckedListBox checkedListBox1;
+        private ContextMenuStrip contextMenuStrip1;
     }
 }

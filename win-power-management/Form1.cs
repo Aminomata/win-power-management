@@ -1,26 +1,42 @@
 using Microsoft.Win32;
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms.PropertyGridInternal;
 
 namespace win_power_management
 {
     public partial class Form1 : Form
     {
-        private readonly IDictionary<string, Guid> schemes = PowerSchemes.GetAll();
+        private readonly IDictionary<string, Guid> _schemes = PowerSchemes.GetAll();
+        private const string QUIT = "Quit";
+
+        private IList<ToolStripMenuItem> PowerSchemesMenu { get; set; }
 
         public Form1()
         {
             InitializeComponent();
-            SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
 
-            var schemesNames = schemes.Keys;
-            checkedListBox1.Items.AddRange(schemesNames.ToArray());
+            var schemesNames = _schemes.Keys;
 
-            checkedListBox1.CheckOnClick = true;
+            PowerSchemesMenu = schemesNames
+                .Select(s => new ToolStripMenuItem(s, null, ItemClick))
+                .ToList();
 
+            PowerSchemesMenu
+                .Add(new ToolStripMenuItem(QUIT, null, ItemClick));
+
+            contextMenuStrip1.Items.AddRange(PowerSchemesMenu.ToArray());
+
+            notifyIcon1.ContextMenuStrip = contextMenuStrip1;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             notifyIcon1.BalloonTipTitle = "TITLE";
+            this.Hide();
+            Visible = false;
+            SetVisibleCore(false);
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -37,31 +53,42 @@ namespace win_power_management
             }
         }
 
-        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void ItemClick(object? sender, EventArgs e)
         {
-            for (int i = 0; i < checkedListBox1.Items.Count; ++i)
-                if (i != e.Index) checkedListBox1.SetItemChecked(i, false);
+            //for (int i = 0; i < checkedListBox1.Items.Count; ++i)
+            //    if (i != e.Index) checkedListBox1.SetItemChecked(i, false);
+            var checkedList = (ToolStripMenuItem)sender;
+            var checkedBox = checkedList.Text as string;
 
-            var checkedList = (CheckedListBox)sender;
-            var checkedBox = checkedList.SelectedItem as string;
+            if (checkedBox == QUIT)
+            {
+                Application.Exit();
+                return;
+            }
 
-            PowerSchemes.SetActiveScheme(schemes[checkedBox]);
+            PowerSchemes.SetActiveScheme(_schemes[checkedBox]);
+            
+            PowerSchemesMenu = PowerSchemesMenu
+                .Select(t =>
+                    {
+                        if (t.Text == checkedBox)
+                        {
+                            return new ToolStripMenuItem(t.Text, Properties.Resources.Power.ToBitmap(), ItemClick);
+                        }
+
+                        return new ToolStripMenuItem(t.Text, null, ItemClick);
+                    })
+                .ToList();
+
+            contextMenuStrip1.Items.Clear();
+            contextMenuStrip1.Items.AddRange(PowerSchemesMenu.ToArray());
+
+            this.Hide();
         }
 
-        void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            switch (SystemInformation.PowerStatus.BatteryChargeStatus)
-            {
-                case System.Windows.Forms.BatteryChargeStatus.Low:
-                    MessageBox.Show("Battery is running low.", "Low Battery", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    break;
-                case System.Windows.Forms.BatteryChargeStatus.Critical:
-                    MessageBox.Show("Battery is critcally low.", "Critical Battery", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    break;
-                default:
-                    // Battery is okay.
-                    break;
-            }
+
         }
     }
 }
