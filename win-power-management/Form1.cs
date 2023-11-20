@@ -1,9 +1,3 @@
-using Microsoft.Win32;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms.PropertyGridInternal;
-
 namespace win_power_management
 {
     public partial class Form1 : Form
