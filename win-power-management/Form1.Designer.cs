@@ -43,7 +43,7 @@
             // contextMenuStrip1
             // 
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 26);
+            contextMenuStrip1.Size = new Size(61, 4);
             // 
             // Form1
             // 
@@ -53,6 +53,7 @@
             Name = "Form1";
             Text = "Power management";
             Load += Form1_Load;
+            Shown += Form1_Load;
             Resize += Form1_Resize;
             ResumeLayout(false);
         }

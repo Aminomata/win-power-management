@@ -1,3 +1,5 @@
+using System.Windows;
+
 namespace win_power_management
 {
     public partial class Form1 : Form
@@ -13,11 +15,14 @@ namespace win_power_management
 
             contextMenuStrip1.Items.AddRange(PowerSchemesMenu.ToArray());
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
+
+            this.Visible = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             notifyIcon1.BalloonTipTitle = "TITLE";
+            this.Visible = false;
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -40,7 +45,7 @@ namespace win_power_management
             }
 
             PowerSchemes.SetActiveScheme(PowerSchemes._schemes[checkedBox]);
-            
+
             this.Hide();
 
             SetSchemes();
